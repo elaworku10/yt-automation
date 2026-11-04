@@ -1,0 +1,41 @@
+name: Upload Video to YouTube
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'   # every 12 hours
+  workflow_dispatch:          # manual trigger
+
+concurrency:
+  group: youtube-upload
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run upload script
+        env:
+          TOKEN_JSON: ${{ secrets.TOKEN_JSON }}
+          TOKEN_JSON_2: ${{ secrets.TOKEN_JSON_2 }}
+          TOKEN_JSON_3: ${{ secrets.TOKEN_JSON_3 }}
+          FOLDER_ID_1: ${{ secrets.FOLDER_ID_1 }}
+          FOLDER_ID_2: ${{ secrets.FOLDER_ID_2 }}
+          FOLDER_ID_3: ${{ secrets.FOLDER_ID_3 }}
+        run: python upload_drive.py
