@@ -2,7 +2,7 @@ name: Upload Video to YouTube
 
 on:
   schedule:
-    - cron: '0 */12 * * *'   # every 12 hours
+    - cron: '0 0 * * *'   # every 24 hours (daily at 00:00 UTC)   # every 12 hours
   workflow_dispatch:          # manual trigger
 
 concurrency:
